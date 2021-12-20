@@ -98,8 +98,15 @@ CoNI<- function(edgeD, vertexD,
     }
   }
 
+
+  eval_parse_text<-function(text){
+    eval(parse(text=(paste(text))))
+  }
+
   #Check parameters
-  ParaList<-as.list(match.call())
+  ParaList_temp<-as.list(match.call())
+  ParaList <- lapply(names(ParaList_temp),eval_parse_text) #New line
+  names(ParaList)<-names(ParaList_temp) #New line
   checkInputParameters(ParaList)
 
   #Check if input objects are defined
@@ -1267,7 +1274,7 @@ Compare_VertexClasses_sharedEdgeFeatures<-function(Treat1_path,Treat2_path,Outpu
   }
 
   DFTreat1<-read.csv(Treat1_path,nrows = 2,header=TRUE)
-  DFTreat2<-read.csv(Treat1_path,nrows = 2,header=TRUE)
+  DFTreat2<-read.csv(Treat2_path,nrows = 2,header=TRUE)
   are_ClassColumnsPresent(DFTreat1)
   are_ClassColumnsPresent(DFTreat2)
 

@@ -25,9 +25,9 @@ library(CoNI)
 
 ## Introduction
 
-This vignette is an introduction to `CoNI`. Following this vignette, one can analyze the data in Valentina et al. (2021). `CoNI` is run using gene expression and metabolic data for the livers of two mice cohorts, one on a high-fat diet (HFD) and the other on a chow diet (Chow).
+This vignette is an introduction to `CoNI`. Following this vignette, one can analyze the data in Klaus et al. (2021). `CoNI` is run using gene expression and metabolic data for the livers of two mice cohorts, one on a high-fat diet (HFD) and the other on a chow diet (Chow).
 
-These data is already pre-processed, that is, normalized and low-count filtered. For more information see Valentina et al. (2021)
+These data is already pre-processed, that is, normalized and low-count filtered. For more information see Klaus et al. (2021)
 
 #### Installation requirements
 

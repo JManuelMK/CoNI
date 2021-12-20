@@ -46,7 +46,7 @@ def get_ClassNestedDict(file):
                 elif LipClassFwd in dict_Proteins_ClassNested[protein].keys():
                     dict_Proteins_ClassNested[protein][LipClassFwd]+=1
                 elif LipClassRev in dict_Proteins_ClassNested[protein].keys():
-                    dict_Proteins_ClassNested[protein][LipClassFwd]+=1
+                    dict_Proteins_ClassNested[protein][LipClassRev]+=1
     return(dict_Proteins_ClassNested)
 
 """
