@@ -126,4 +126,5 @@ Possibly misspelled words in DESCRIPTION:
 * There was a mistake in the python script ComparisonClasses.py, in the function get_ClassNestedDict. In the line 49 the dictionary key was changed to LipClassRev instead of LipClassFwd
 * A mistake was corrected in the R function Compare_VertexClasses_sharedEdgeFeatures. For the check of the column class from the input, the same file was read for the two input tables.
 *The citation in the vignette was corrected and changed from Valentina et al. (2021) to Klaus et al. (2021)
+*The function sig_correlation2Dfs was modified in line 889, to store data in a list and rbindlist later. This approach runs faster.
 

@@ -3,7 +3,7 @@ title: "CoNI"
 author: "José Manuel Monroy Kuhn"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
+  html_document:
     toc: true
     toc_depth: 3
 vignette: >
@@ -32,8 +32,10 @@ These data is already pre-processed, that is, normalized and low-count filtered.
 #### Installation requirements
 
 `CoNI` requires a few R packages to function. Make sure they are installed before installing CoNI:
-```{r install_dependencies}
-# dependencies<-c("igraph","doParallel","cocor","tidyverse","foreach","ggrepel","gplots","gridExtra","plyr","ppcor","tidyr","Hmisc")
+
+```{r install_dependencies, eval = FALSE}
+# dependencies<-c("igraph","doParallel","cocor","tidyverse","foreach",
+# "ggrepel","gplots","gridExtra","plyr","ppcor","tidyr","Hmisc")
 # 
 # `%notin%`<-Negate(`%in%`)
 # for(package in dependencies){
@@ -83,6 +85,7 @@ HFD_gene<-HFD_GeneExpData
 To run `CoNI`, one can decide to keep metabolites (vertex-features) based on the significance of their pairwise correlations (padjustvertexD=FALSE) or do more stringent filtering by keeping only metabolites that significantly correlate after multiple-testing adjustment (padjustvertexD=TRUE). The user can also pre-filter the genes by keeping only those that significantly correlate with at least one metabolite (correlateDFs=TRUE).
 
 Note: This run takes around 5 hours (12 cores, 32Gb of RAM). Adjust according to the available resources.
+
 ```{r CoNI_chow,eval=FALSE, echo=TRUE}
 #Run for Chow
 # CoNIResults_Chow<-CoNI(edgeD = Chow_gene,vertexD = Chow_metabo,
@@ -93,12 +96,14 @@ Note: This run takes around 5 hours (12 cores, 32Gb of RAM). Adjust according to
 ```
 
 To speed up this vignette, load significant Chow results:
+
 ```{r load_CoNIResults_chow}
 #Load chow results
 data(CoNIResults_Chow)
 ```
 
 Note: This run takes around 5 hours (12 cores, 32Gb of RAM). Adjust according to the available resources.
+
 ```{r CoNI_hfd,eval=FALSE, echo=TRUE}
 #Run for HFD
 # CoNIResults_HFD<-CoNI(edgeD = HFD_gene,vertexD = HFD_metabo,
@@ -109,6 +114,7 @@ Note: This run takes around 5 hours (12 cores, 32Gb of RAM). Adjust according to
 ```
 
 To speed up this vignette, load significant HFD results:
+
 ```{r load_CoNIResults_hfd}
 #Load HFD results
 data(CoNIResults_HFD)
@@ -162,14 +168,19 @@ The networks are saved automatically (graphml format) and can be uploaded to Cyt
 
 ### Basic network statistics
 We can obtain some basic network statistics with the function NetStats.
+
 ```{r network_stats_chow}
 library(knitr)
 library(kableExtra)
-kable(NetStats(Network = ChowNetworkWithClass),caption="Network statistics Chow") %>% kable_styling(full_width = FALSE)
+kable(NetStats(Network = ChowNetworkWithClass),
+      caption="Network statistics Chow") %>% 
+  kable_styling(full_width = FALSE)
 ```
 
 ```{r network_stats_hfd}
-kable(NetStats(Network = HFDNetworkWithClass),caption="Network statistics HFD")  %>% kable_styling(full_width = FALSE)
+kable(NetStats(Network = HFDNetworkWithClass),
+      caption="Network statistics HFD")  %>% 
+  kable_styling(full_width = FALSE)
 ```
 
 ### Clustering options in igraph
@@ -191,7 +202,9 @@ Spectral$membership
 ```
 ```{r spectral_image,fig.show='hide', out.width = '100%', out.height = '100%', fig.width = 7, fig.heigt = 7}
 #Plot the network
-plot(ChowNetworkWithClass, vertex.color=membership(Spectral), layout=coordinates)
+plot(ChowNetworkWithClass, 
+     vertex.color=membership(Spectral), 
+     layout=coordinates)
 ```
 
 ###### Community structure via greedy optimization of modularity
@@ -203,7 +216,9 @@ greedy$membership
 ```
 ```{r greedy_image,fig.show='hide',out.width = '100%', out.height = '100%', fig.width = 7, fig.heigt = 7}
 #Plot the network
-plot(ChowNetworkWithClass, vertex.color=membership(greedy), layout=coordinates)
+plot(ChowNetworkWithClass, 
+     vertex.color=membership(greedy), 
+     layout=coordinates)
 ```
 
 ###### Community structure via greedy optimization of modularity
@@ -214,7 +229,9 @@ betweenness$membership
 ```
 ```{r betweenness_image,fig.show='hide',out.width = '100%', out.height = '100%', fig.width = 7, fig.heigt = 7}
 #Plot the network
-plot(ChowNetworkWithClass, vertex.color=membership(betweenness), layout=coordinates)
+plot(ChowNetworkWithClass, 
+     vertex.color=membership(betweenness), 
+     layout=coordinates)
 ```
 
 See igraph package for more options.
@@ -226,7 +243,9 @@ Local controlling genes (LCGs); are genes that appear in a network region more o
 ```{r local_controlling_genes_Chow}
 #Chow
 #Get results binomial test 
-LCGenes_ResultsBinomialTable_Chow<- find_localControllingFeatures(ResultsCoNI = CoNIResults_Chow,network = ChowNetworkWithClass)
+LCGenes_ResultsBinomialTable_Chow<- find_localControllingFeatures(
+  ResultsCoNI = CoNIResults_Chow,
+  network = ChowNetworkWithClass)
 #Get list local controlling genes
 LCGenes_Chow<-as.character(unique(LCGenes_ResultsBinomialTable_Chow$edgeFeatures))
 ```
@@ -234,7 +253,9 @@ LCGenes_Chow<-as.character(unique(LCGenes_ResultsBinomialTable_Chow$edgeFeatures
 ```{r local_controlling_genes_HFD}
 #HFD
 #Get results binomial test
-LCGenes_ResultsBinomialTable_HFD<- find_localControllingFeatures(ResultsCoNI = CoNIResults_HFD,network = HFDNetworkWithClass)
+LCGenes_ResultsBinomialTable_HFD<- find_localControllingFeatures(
+  ResultsCoNI = CoNIResults_HFD,
+  network = HFDNetworkWithClass)
 #Get list local controlling genes
 LCGenes_HFD<-as.character(unique(LCGenes_ResultsBinomialTable_HFD$edgeFeatures))
 ```
@@ -246,13 +267,17 @@ The user can obtain a table of the local controlling genes matching the paired m
 #Generate table local controlling genes
 TableLCFsChow<-tableLCFs_VFs(CoNIResults = CoNIResults_Chow,LCFs = LCGenes_Chow)
 #Show first two rows
-TableLCFChowk<-kable(TableLCFsChow[1:2,],caption="Table Local Controlling Genes") %>% kable_styling(full_width = FALSE)
+TableLCFChowk<-kable(TableLCFsChow[1:2,],
+                     caption="Table Local Controlling Genes") %>% 
+  kable_styling(full_width = FALSE)
 
 #HFD
 #Generate table local controlling genes
 TableLCFsHFD<-tableLCFs_VFs(CoNIResults = CoNIResults_HFD,LCFs = LCGenes_HFD)
 #Show first two rows
-TableLCFHFDk<-kable(TableLCFsHFD[1:2,],caption="Table Local Controlling Genes") %>% kable_styling(full_width = FALSE)
+TableLCFHFDk<-kable(TableLCFsHFD[1:2,],
+                    caption="Table Local Controlling Genes") %>% 
+  kable_styling(full_width = FALSE)
 TableLCFHFDk
 ```
 
@@ -306,8 +331,11 @@ write.graph(HFDBipartiteGraph,file="./HFD_bipartite.graphml",format="graphml")
 The resulting bipartite graph can be uploaded in Cytoscape for further visualization and exploration.
 
 It is also possible to obtain a hypergraph incidence matrix instead of a bipartite graph
+
 ```{r}
-Chow_HypergraphIncidenceM<-createBipartiteGraph("./TableForNetwork_Chow.csv",MetaboliteAnnotation,incidenceMatrix = TRUE)
+Chow_HypergraphIncidenceM<-createBipartiteGraph("./TableForNetwork_Chow.csv",
+                                                MetaboliteAnnotation,
+                                                incidenceMatrix = TRUE)
 ```
 
 

@@ -255,7 +255,7 @@ CoNI<- function(edgeD, vertexD,
           cor_pvalue<-normvertexD_Tablesignificant[i,4]
 
           #Calculate partial correlation between vertex features partialling out edge feature (e.g. metabolites and gene)
-          pcor_result<-pcor.test(vertexD[,index1],vertexD[,index2],df_iter[,j],method="p")
+            pcor_result<-pcor.test(vertexD[,index1],vertexD[,index2],df_iter[,j],method="p")
           pcor_pvalue<-pcor_result[[2]]
           pcor_coefficient<-pcor_result[[1]]
 
@@ -848,6 +848,7 @@ sig_correlation2<-function(input_edgeD,padj=TRUE,method="BH", verb){
 #' @description Internal use. This function input are two data frames (e.g. metabolites and genes). It calculates the correlation matrix and creates a table with only significant pairs. No correction for multiple testing is done
 #' @keywords internal
 #' @importFrom stats pt
+#' @importFrom data.table rbindlist
 #' @return A data.frame with vertex-edge significant correlation coefficients and their p-values
 sig_correlation2Dfs<-function(metabolite_data,gene_expression){
   n <- t(!is.na(metabolite_data)) %*% (!is.na(gene_expression)) # same as count.pairwise(x,y) from psych package/ Matches number of samples
@@ -874,19 +875,24 @@ sig_correlation2Dfs<-function(metabolite_data,gene_expression){
                    cor=double(),
                    pvalue=double(),
                    stringsAsFactors=FALSE)
-#This part is slow... needs to be improved
+  #This part is slow... needs to be improved
+  n<-0
+  df<-list()
   for(i in rows){
     for(j in cols){
+      n<-n+1
       if (pvalueMatrix[i,j]>0.05){
         next
       }else{
         cor<-rcoeffMatrix[i,j]
         pvalue<-pvalueMatrix[i,j]
-        df<- df %>% add_row(metabolite = i, gene = j, cor = cor, pvalue = pvalue) #This part might be inefficient and slow
+        df[[n]]<-list(metabolite = i, gene = j, cor = cor, pvalue = pvalue)
+        # df<- df %>% add_row(metabolite = i, gene = j, cor = cor, pvalue = pvalue) #This part might be inefficient and slow
       }
 
     }
   }
+  df <- data.table::rbindlist(df)
   df
 }
 
